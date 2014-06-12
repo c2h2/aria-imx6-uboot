@@ -846,6 +846,16 @@ struct display_info_t {
 	struct	fb_videomode mode;
 };
 
+static void enable_lvds(struct display_info_t const *dev)
+{
+        struct iomuxc *iomux = (struct iomuxc *)
+                                IOMUXC_BASE_ADDR;
+        u32 reg = readl(&iomux->gpr[2]);
+        reg |= IOMUXC_GPR2_DATA_WIDTH_CH0_18BIT |
+               IOMUXC_GPR2_DATA_WIDTH_CH1_18BIT;
+        writel(reg, &iomux->gpr[2]);
+}
+
 static void disable_lvds(struct display_info_t const *dev)
 {
 	struct iomuxc *iomux = (struct iomuxc *)IOMUXC_BASE_ADDR;
@@ -869,21 +879,21 @@ static struct display_info_t const displays[] = {{
 	.addr	= 0,
 	.pixfmt	= IPU_PIX_FMT_RGB666,
 	.detect	= NULL,
-	.enable	= NULL,
+	.enable	= enable_lvds,
 	.mode	= {
-		.name           = "Hannstar-XGA",
-		.refresh        = 60,
-		.xres           = 1024,
-		.yres           = 768,
-		.pixclock       = 15385,
-		.left_margin    = 220,
-		.right_margin   = 40,
-		.upper_margin   = 21,
-		.lower_margin   = 7,
-		.hsync_len      = 60,
-		.vsync_len      = 10,
-		.sync           = FB_SYNC_EXT,
-		.vmode          = FB_VMODE_NONINTERLACED
+		.name           = "Chimei LVDS Screen",
+                .refresh        = 60,
+                .xres           = 1360,
+                .yres           = 768,
+                .pixclock       = 14294,
+                .left_margin    = 67,
+                .right_margin   = 14,
+                .upper_margin   = 13,
+                .lower_margin   = 2,
+                .hsync_len      = 29,
+                .vsync_len      = 7,
+                .sync           = FB_SYNC_HOR_HIGH_ACT,
+                .vmode          = FB_VMODE_NONINTERLACED
 } }, {
 	.bus	= -1,
 	.addr	= 0,

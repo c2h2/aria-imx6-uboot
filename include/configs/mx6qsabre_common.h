@@ -192,8 +192,11 @@
 	"mmcpart=" __stringify(CONFIG_SYS_MMC_IMG_LOAD_PART) "\0" \
 	"mmcroot=" CONFIG_MMCROOT " rootwait rw\0" \
 	"smp=" CONFIG_SYS_NOSMP "\0"\
+	"video=video=mxcfb0:dev=ldb,LDB-WXGA1360,if=RGB666 video=mxcfb1:off " \
+	"video=mxcfb2:dev=hdmi,1920x1080M@60,if=RGB24 video=mxcfb3:off " \
+	"consoleblank=0 fbmem=64M\0" \
 	"mmcargs=setenv bootargs console=${console},${baudrate} ${smp} " \
-		"root=${mmcroot}\0" \
+		"root=${mmcroot} ${video}\0" \
 	"loadbootscript=" \
 		"fatload mmc ${mmcdev}:${mmcpart} ${loadaddr} ${script};\0" \
 	"bootscript=echo Running bootscript from mmc ...; " \
