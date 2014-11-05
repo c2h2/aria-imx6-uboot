@@ -194,7 +194,7 @@
 	"smp=" CONFIG_SYS_NOSMP "\0"\
 	"video=video=mxcfb0:dev=ldb,LDB-WXGA1360,if=RGB666 video=mxcfb1:off " \
 	"video=mxcfb2:dev=hdmi,1920x1080M@60,if=RGB24 video=mxcfb3:off " \
-	"consoleblank=0 fbmem=64M\0" \
+	"consoleblank=0 fbmem=64M ldb=dul0\0" \
 	"mmcargs=setenv bootargs console=${console},${baudrate} ${smp} " \
 		"root=${mmcroot} ${video}\0" \
 	"loadbootscript=" \
