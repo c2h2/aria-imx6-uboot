@@ -176,6 +176,17 @@
 		"bootm ${loadaddr} - ${fdt_addr} \0" \
 	"bootcmd=run bootcmd_sata \0"
 #else
+#define CONFIG_MMCROOT_LUNA \
+        "if test ${mmcdev} = 2; then " \
+                "mmcbootroot=/dev/mmcblk0p2 ;" \
+        "else " \
+                "if test ${mmcdev} = 1; then " \
+                        "mmcbootroot=/dev/mmcblk1p2 ;" \
+                "else " \
+                        "mmcbootroot="CONFIG_MMCROOT" ; " \
+                "fi; " \
+        "fi"
+
 #define CONFIG_EXTRA_ENV_SETTINGS \
 	CONFIG_MFG_ENV_SETTINGS \
 	"script=boot.scr\0" \
@@ -189,8 +200,9 @@
 	"initrd_high=0xffffffff\0" \
 	CONFIG_MMC_DEV_SET \
 	"\0" \
+	CONFIG_MMCROOT_LUNA \
 	"mmcpart=" __stringify(CONFIG_SYS_MMC_IMG_LOAD_PART) "\0" \
-	"mmcroot=" CONFIG_MMCROOT " rootwait rw\0" \
+	"mmcroot=${mmcbootroot} rootwait rw\0" \
 	"smp=" CONFIG_SYS_NOSMP "\0"\
 	"video=video=mxcfb0:dev=ldb,LDB-WXGA1360,if=RGB666 video=mxcfb1:off " \
 	"video=mxcfb2:dev=hdmi,1920x1080M@60,if=RGB24 video=mxcfb3:off " \
