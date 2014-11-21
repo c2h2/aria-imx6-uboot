@@ -177,15 +177,15 @@
 	"bootcmd=run bootcmd_sata \0"
 #else
 #define CONFIG_MMCROOT_LUNA \
-        "if test ${mmcdev} = 2; then " \
-                "mmcbootroot=/dev/mmcblk0p2 ;" \
+        "mmcbootroot_cfg=if test ${mmcdev} = 2; then " \
+                "setenv mmcbootroot /dev/mmcblk0p2 ;" \
         "else " \
                 "if test ${mmcdev} = 1; then " \
-                        "mmcbootroot=/dev/mmcblk1p2 ;" \
+                        "setenv mmcbootroot /dev/mmcblk1p2 ;" \
                 "else " \
-                        "mmcbootroot="CONFIG_MMCROOT" ; " \
+                        "setenv mmcbootroot "CONFIG_MMCROOT" ; " \
                 "fi; " \
-        "fi"
+        "fi\0"
 
 #define CONFIG_EXTRA_ENV_SETTINGS \
 	CONFIG_MFG_ENV_SETTINGS \
@@ -200,15 +200,15 @@
 	"initrd_high=0xffffffff\0" \
 	CONFIG_MMC_DEV_SET \
 	"\0" \
-	CONFIG_MMCROOT_LUNA \
 	"mmcpart=" __stringify(CONFIG_SYS_MMC_IMG_LOAD_PART) "\0" \
-	"mmcroot=${mmcbootroot} rootwait rw\0" \
+	CONFIG_MMCROOT_LUNA \
+	"mmcroot_args=rootwait ro\0" \
 	"smp=" CONFIG_SYS_NOSMP "\0"\
 	"video=video=mxcfb0:dev=ldb,LDB-WXGA1360,if=RGB666 video=mxcfb1:off " \
 	"video=mxcfb2:dev=hdmi,1920x1080M@60,if=RGB24 video=mxcfb3:off " \
 	"consoleblank=0 fbmem=64M ldb=dul0\0" \
 	"mmcargs=setenv bootargs console=${console},${baudrate} ${smp} " \
-		"root=${mmcroot} ${video}\0" \
+		"root=${mmcbootroot} ${mmcroot_args} ${video}\0" \
 	"loadbootscript=" \
 		"fatload mmc ${mmcdev}:${mmcpart} ${loadaddr} ${script};\0" \
 	"bootscript=echo Running bootscript from mmc ...; " \
@@ -216,6 +216,7 @@
 	"loaduimage=fatload mmc ${mmcdev}:${mmcpart} ${loadaddr} ${uimage}\0" \
 	"loadfdt=fatload mmc ${mmcdev}:${mmcpart} ${fdt_addr} ${fdt_file}\0" \
 	"mmcboot=echo Booting from mmc ...; " \
+		"run mmcbootroot_cfg; " \
 		"run mmcargs; " \
 		"if test ${boot_fdt} = yes || test ${boot_fdt} = try; then " \
 			"if run loadfdt; then " \
